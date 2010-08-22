@@ -71,8 +71,7 @@ Item::Item(const QFileInfo& fileInfo, Item* parent)
       attributes_[FILE_TYPE] = TYPE_DIR;
       //const QFileInfoList fileInfoList = QDir(fileInfo.filePath()).entryInfoList(QDir::NoDotAndDotDot);
       const QFileInfoList fileInfoList = QDir(fileInfo.filePath()).entryInfoList();
-      qDebug() << fileInfo.size();
-      qDebug() << fileInfo.filePath();
+
       for(QFileInfoList::const_iterator iterator = fileInfoList.begin(); iterator != fileInfoList.end(); ++iterator)
         {
           if(iterator->fileName() != "." && iterator->fileName() != "..")
@@ -164,7 +163,7 @@ FileSystemModel::FileSystemModel(const QString& rootPath, QObject* parent)
   :QAbstractItemModel(parent),
    root_(NULL)
 {
-  //setRootPath(rootPath);
+  setRootPath(rootPath);
 }
 
 bool FileSystemModel::setRootPath(const QString& rootPath)
@@ -179,7 +178,6 @@ bool FileSystemModel::setRootPath(const QString& rootPath)
   beginResetModel();
   root_ = new Item(fileInfo, NULL);
   endResetModel();
-  //reset();
 
   return true;
 }
@@ -257,50 +255,17 @@ QVariant FileSystemModel::data(const QModelIndex& index, int role) const
       return item -> attribute(Item::FILE_NAME);
     case Qt::CheckStateRole:
       return Qt::Unchecked;
-    defaulte:
+    default:
       return QVariant();
     }
-
-  return QVariant();
 }
 
-// bool FileSystemModel::setData(const QModelIndex& index, const QVariant& value, int role)
-// {
-//   return true;
-// }
+bool FileSystemModel::setData(const QModelIndex& index, const QVariant& value, int role)
+{
+  return true;
+}
 
 Qt::ItemFlags FileSystemModel::flags(const QModelIndex& index) const
 {
-  return QAbstractItemModel::flags(index) | Qt::ItemIsSelectable | Qt::ItemIsEnabled;
+  return QAbstractItemModel::flags(index) | Qt::ItemIsSelectable | Qt::ItemIsEnabled | Qt::ItemIsEditable;
 }
-
-// bool FileSystemModel::setRootPath(const QString& rootPath)
-// {
-//   QFileInfo fileInfo(rootPath);
-//   if(!fileInfo.exists())
-//     {
-//       assert("Not a valid path");
-//       return false;      
-//     }
-
-//   TYPE type;
-//   if(fileInfo.isFile())
-//     {
-//       type = Item::TYPE_FILE;
-//     }
-//   else if(fileInfo.isDir())
-//     {
-//       type = Item::TYPE_DIR;      
-//     }
-//   else if(fileInfo.isSymLink())
-//     {
-//       type = Item::LINK;            
-//     }
-
-//   const QString& name = fileInfo.canonicalFilepath();
-//   root_ = new Item(name, type, NULL);
-    
-//   reset();
-
-//   return true;
-// }
