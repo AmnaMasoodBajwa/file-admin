@@ -137,25 +137,15 @@ void Window::SetupHelpMenu()
 
 void Window::SetupWindowContents()
 {
-  //data_ -> splitter_ = new QSplitter(Qt::Horizontal, this);
+  data_ -> splitter_ = new QSplitter(Qt::Horizontal, this);
   data_ -> treeView_ = new QTreeView(this);
-  //data_ -> stackedWidget_ = new QStackedWidget(this);
+  data_ -> stackedWidget_ = new QStackedWidget(this);
 
-  //FileSystemModel* model = new FileSystemModel("/home/yhj", this);
-  //data_ -> treeView_ -> setModel(model);
-  
-  //data_ -> splitter_ -> addWidget(data_ -> treeView_);
-  //data_ -> splitter_ -> addWidget(data_ -> stackedWidget_);
-
-  //setCentralWidget(data_ -> splitter_);
-  // data_ -> treeView_ -> setModel(model);
-  // model -> setRootPath("/home/yhj");
-
-  //QFileSystemModel* model = new QFileSystemModel(this);
   FileSystemModel* model = new FileSystemModel("/home/yhj", this);
-  //model -> setRootPath("/home/yhj");
   data_ -> treeView_ -> setModel(model);
-  model -> setRootPath("/home/yhj");
+  
+  data_ -> splitter_ -> addWidget(data_ -> treeView_);
+  data_ -> splitter_ -> addWidget(data_ -> stackedWidget_);
 
-  setCentralWidget(data_ -> treeView_);
+  setCentralWidget(data_ -> splitter_);
 }

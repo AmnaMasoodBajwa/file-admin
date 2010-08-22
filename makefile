@@ -3,7 +3,7 @@ MOC = $(QTDIR)/bin/moc
 
 CC = gcc
 CXX = g++
-CPPFLAGS = -g -I include -I $(QTDIR)/include/QtGui -I $(QTDIR)/include/QtCore -I $(QTDIR)/include
+CPPFLAGS = -Wall -g -I include -I $(QTDIR)/include/QtGui -I $(QTDIR)/include/QtCore -I $(QTDIR)/include
 LD = ld
 LDFLAGS =  -L src -L $(QTDIR)/lib -lQtGui -lQtCore
 
