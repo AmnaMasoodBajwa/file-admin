@@ -5,10 +5,10 @@ CC = gcc
 CXX = g++
 CPPFLAGS = -Wall -g -I include -I $(QTDIR)/include/QtGui -I $(QTDIR)/include/QtCore -I $(QTDIR)/include
 LD = ld
-LDFLAGS =  -L src -L $(QTDIR)/lib -lQtGui -lQtCore
+LDFLAGS =  -L src -L $(QTDIR)/lib -lQtCore -lQtGui
 
-vpath %.cpp src
 vpath %.h include
+vpath %.cpp src
 
 META_HEADERS = window.h FileSystemModel.h
 MOC_SOURCES = $(patsubst %.h, moc_%.cpp, $(META_HEADERS))
@@ -20,7 +20,7 @@ OBJECTS = $(patsubst %.cpp, %.o, $(SOURCES) $(MOC_SOURCES))
 
 PROGRAM = file-manager
 
-$(PROGRAM):$(OBJECTS)
+$(PROGRAM):$(OBJECTS) 
 	$(CXX) -o $@ $^ $(LDFLAGS)
 
 $(OBJECTS):%.o:%.cpp
@@ -29,7 +29,15 @@ $(OBJECTS):%.o:%.cpp
 $(MOC_SOURCES):moc_%.cpp:%.h
 	$(MOC) -o $@ $<
 
+%.d:%.cpp
+	rm -f $@
+	$(CXX) -MM $(CPPFLAGS) $< >$@
+	sed -i -e 's/\($*\)\.o[ :]*/\1.o $@ : /g' $@
+
+DEPENDS = $(patsubst %.o, %.d, $(OBJECTS))
+-include $(DEPENDS)
+
 .PHONY:clean
 
 clean:
-	rm -rf $(PROGRAM) *.o $(MOC_SOURCES)
+	rm -rf $(PROGRAM) *.o $(MOC_SOURCES) $(DEPENDS)
